@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="112.0" prefWidth="216.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorVentana">
+   <children>
+      <TextField fx:id="fieldNombre" layoutX="24.0" layoutY="33.0" prefHeight="25.0" prefWidth="176.0" />
+      <Label fx:id="labelNombre" layoutX="24.0" layoutY="16.0" text="Nombre Ventana" />
+      <Button fx:id="buttonGuardar" layoutX="75.0" layoutY="65.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonSalir" layoutX="142.0" layoutY="65.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
+   </children>
+</AnchorPane>

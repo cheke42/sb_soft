@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="366.0" prefWidth="323.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorAsignarVentanaEnComponente">
+   <children>
+      <Label fx:id="labelSeleccionarVentana" layoutX="19.0" layoutY="17.0" text="Seleccionar Ventana" />
+      <ComboBox fx:id="comboVentana" layoutX="19.0" layoutY="34.0" onAction="#comboVentanaAction" prefHeight="25.0" prefWidth="285.0" promptText="Seleccione una ventana.." />
+      <TableView fx:id="tableComponentes" layoutX="19.0" layoutY="70.0" prefHeight="250.0" prefWidth="285.0">
+        <columns>
+          <TableColumn fx:id="columnNombreComponente" prefWidth="199.0" text="Nombre Componente" />
+          <TableColumn fx:id="columnCheckIncluido" prefWidth="84.0" text="Incluido" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Button fx:id="buttonGuardar" disable="true" layoutX="168.0" layoutY="331.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonSalir" layoutX="241.0" layoutY="331.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
+   </children>
+</AnchorPane>

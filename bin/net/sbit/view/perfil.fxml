@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="133.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorPerfil">
+   <children>
+      <Label fx:id="labelNombrePerfil" layoutX="21.0" layoutY="21.0" text="Nombre Perfil" />
+      <TextField fx:id="fieldNombrePerfil" layoutX="21.0" layoutY="37.0" prefHeight="25.0" prefWidth="161.0" />
+      <Button fx:id="buttonGuardar" layoutX="55.0" layoutY="97.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonSalir" layoutX="122.0" layoutY="97.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
+      <CheckBox fx:id="checkBoxHabilitado" layoutX="22.0" layoutY="67.0" mnemonicParsing="false" onAction="#habilitado" text="Habilitado" />
+   </children>
+</AnchorPane>

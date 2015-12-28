@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="395.0" prefWidth="343.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorAdministracionPerfil">
+   <children>
+      <Label fx:id="labelPerfil" layoutX="19.0" layoutY="23.0" text="Perfil" />
+      <Label fx:id="labelVentanasVisibles" layoutX="19.0" layoutY="56.0" text="Ventanas Visibles" />
+      <ComboBox fx:id="comboPerfil" layoutX="62.0" layoutY="19.0" prefHeight="25.0" prefWidth="209.0" />
+      <Button fx:id="buttonEditarPerfil" layoutX="285.0" layoutY="19.0" mnemonicParsing="false" onAction="#editarPerfil">
+         <graphic>
+            <ImageView fx:id="imageEditarPerfil" fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+      <TableView fx:id="tableViewVentanas" layoutX="19.0" layoutY="80.0" prefHeight="263.0" prefWidth="300.0">
+        <columns>
+          <TableColumn fx:id="columnVentana" prefWidth="196.0" text="Ventana" />
+          <TableColumn fx:id="columnVisible" prefWidth="103.0" text="Visible" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Button fx:id="buttonGuardar" layoutX="195.0" layoutY="355.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonSalir" layoutX="259.0" layoutY="355.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorPrincipal">
+   <children>
+      <Button fx:id="button" layoutX="213.0" layoutY="164.0" mnemonicParsing="false" text="Button" />
+      <MenuBar fx:id="menuBar" prefHeight="25.0" prefWidth="960.0">
+        <menus>
+          <Menu fx:id="menuArchivo" mnemonicParsing="false" text="Archivo">
+            <items>
+              <MenuItem fx:id="menuItemSalir" mnemonicParsing="false" onAction="#salir" text="Salir" />
+            </items>
+          </Menu>
+          <Menu fx:id="menuAdministrar" mnemonicParsing="false" text="Administrar">
+               <items>
+                  <Menu fx:id="menuUsuarios" mnemonicParsing="false" text="Usuarios">
+                    <items>
+                      <MenuItem fx:id="menuItemListarUsuarios" mnemonicParsing="false" onAction="#listaUsuarios" text="Listar Usuarios" />
+                        <MenuItem fx:id="menuItemCrearUsuario" mnemonicParsing="false" onAction="#crearUsuario" text="Crear Usuario" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="MenuPermisos" mnemonicParsing="false" text="Permisos">
+                    <items>
+                      <MenuItem fx:id="menuItemAdministrarPermisos" mnemonicParsing="false" onAction="#administrarPermisos" text="Administrar permisos" />
+                    </items>
+                  </Menu>
+                  <Menu fx:id="menuPerfiles" mnemonicParsing="false" text="Perfiles">
+                     <items>
+                        <MenuItem fx:id="menuItemCrearPerfil" mnemonicParsing="false" onAction="#crearPerfil" text="Crear perfil" />
+                        <MenuItem fx:id="menuItemAdministrarPerfiles" mnemonicParsing="false" onAction="#administrarPerfiles" text="Administrar perfiles" />
+                     </items>
+                  </Menu>
+               </items>
+          </Menu>
+          <Menu fx:id="menuAyuda" mnemonicParsing="false" text="Ayuda">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Acerca de" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <ToolBar fx:id="toolBar" layoutY="575.0" prefHeight="20.0" prefWidth="960.0">
+         <items>
+            <Label fx:id="labelUsuario" text="Usuario: " />
+         </items>
+      </ToolBar>
+   </children>
+</AnchorPane>

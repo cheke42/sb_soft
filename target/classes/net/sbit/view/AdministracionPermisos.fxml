@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="397.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sbit.controller.ControladorAdministracionPermisos">
+   <children>
+      <Label fx:id="labelPerfil" layoutX="18.0" layoutY="22.0" text="Perfil" />
+      <Label fx:id="labelVentana" layoutX="18.0" layoutY="55.0" text="Ventana" />
+      <ComboBox fx:id="comboPerfil" layoutX="74.0" layoutY="18.0" prefHeight="25.0" prefWidth="179.0" />
+      <ComboBox fx:id="comboVentana" layoutX="74.0" layoutY="51.0" prefHeight="25.0" prefWidth="228.0" />
+      <Button fx:id="buttonGuardar" layoutX="163.0" layoutY="369.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonSalir" layoutX="235.0" layoutY="369.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
+      <TableView fx:id="tableViewPermisos" layoutX="26.0" layoutY="110.0" prefHeight="252.0" prefWidth="274.0">
+        <columns>
+          <TableColumn fx:id="columnId" prefWidth="75.0" text="Id" />
+          <TableColumn fx:id="columnTipo" prefWidth="75.0" text="Tipo" />
+            <TableColumn fx:id="columnEstado" prefWidth="75.0" text="Visible" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Label fx:id="labelPermisos" layoutX="16.0" layoutY="90.0" text="Permisos" />
+      <Button fx:id="buttonEditarPerfil" layoutX="262.0" layoutY="17.0" mnemonicParsing="false" onAction="#editarPerfil" prefHeight="28.0" prefWidth="38.0">
+         <graphic>
+            <ImageView fx:id="imageEditarPerfil" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+   </children>
+</AnchorPane>
