@@ -8,22 +8,22 @@ import net.sbit.window.ManejadorVentana;
 
 @SuppressWarnings("restriction")
 public class Principal extends Application {
-    public Stage escenarioPrincipal;
+	public Stage escenarioPrincipal;
 
-    public static void main(String[] args) {
-	HibernateUtil.getSessionFactory();
+	public static void main(String[] args) {
+		HibernateUtil.getSessionFactory();
 
-	launch(args);
+		launch(args);
 
-    }
+	}
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+	@Override
+	public void start(Stage primaryStage) throws Exception {
 
-	ManejadorVentana manejador = new ManejadorVentana();
-	PersistirVentana.agregarVentanasNuevas();
-	manejador.ventanaPrincipal();
+		ManejadorVentana manejador = new ManejadorVentana();
+		PersistirVentana.agregarVentanasNuevas();
+		manejador.ventanaPrincipal();
 
-    }
+	}
 
 }
