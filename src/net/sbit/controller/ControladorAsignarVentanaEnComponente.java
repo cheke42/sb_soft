@@ -1,6 +1,9 @@
+
 package net.sbit.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -9,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -27,148 +29,198 @@ import net.sbit.window.PairValueCell;
 import net.sbit.window.PairValueFactory;
 import net.sbit.window.Ventana;
 
-@SuppressWarnings("restriction")
 public class ControladorAsignarVentanaEnComponente {
-	private Ventana ventana;
+    private Ventana ventana;
 
-	private List<Componente> componentes = new ArrayList<Componente>();
+    public static String ventanaActual;
 
-	private ObservableList<String> listaAnterior = FXCollections.observableArrayList();
+    private List<Componente> componentes = new ArrayList<Componente>();
 
-	private Hashtable<TipoVentana, ObservableList<Pair<String, Object>>> hashVentanas = new Hashtable<TipoVentana, ObservableList<Pair<String, Object>>>();
+    private ObservableList<String> listaAnterior = FXCollections.observableArrayList();
 
-	@FXML
-	private TableColumn<Pair<String, Object>, Object> columnCheckIncluido;
+    public static Hashtable<TipoVentana, ObservableList<Pair<String, Object>>> hashVentanas = new Hashtable<TipoVentana, ObservableList<Pair<String, Object>>>();
 
-	@FXML
-	private TableColumn<Pair<String, Object>, Object> columnNombreComponente;
+    @FXML
+    private TableColumn<Pair<String, Object>, Object> columnCheckIncluido;
 
-	@FXML
-	private TableView<Pair<String, Object>> tableComponentes;
+    @FXML
+    private TableColumn<Pair<String, Object>, Object> columnNombreComponente;
 
-	@FXML
-	private Button buttonGuardar;
+    @FXML
+    private TableView<Pair<String, Object>> tableComponentes;
 
-	@FXML
-	private ComboBox<String> comboVentana;
+    @FXML
+    private Button buttonGuardar;
 
-	@FXML
-	private Label labelSeleccionarVentana;
+    @FXML
+    private ComboBox<String> comboVentana;
 
-	public Ventana getVentana() {
-		return ventana;
+    @FXML
+    private Label labelSeleccionarVentana;
+
+    public Ventana getVentana() {
+	return ventana;
+    }
+
+    public void setVentana(Ventana ventana) {
+	this.ventana = ventana;
+    }
+
+    @FXML
+    private void initialize() {
+	componentes = PersistirComponente.obtenerListaComponentes();
+	asignarVentanas();
+	setearTabla();
+
+    }
+
+    @SuppressWarnings("unused")
+    private Pair<TipoVentana, ObservableList<Pair<String, Object>>> pair2(TipoVentana name,
+	    ObservableList<Pair<String, Object>> value) {
+	return new Pair<>(name, value);
+    }
+
+    private static Pair<String, Object> pair(String name, Object value) {
+	return new Pair<>(name, value);
+    }
+
+    public TableView<Pair<String, Object>> getTableComponentes() {
+	return tableComponentes;
+    }
+
+    public void setTableComponentes(TableView<Pair<String, Object>> tableComponentes) {
+	this.tableComponentes = tableComponentes;
+    }
+
+    @FXML
+    void guardar(ActionEvent event) {
+
+    }
+
+    @FXML
+    void salir(ActionEvent event) {
+	ventana.getEscenario().close();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void asignarVentanas() {
+	List<net.sbit.model.Ventana> listaVentanas = PersistirVentana.obtenerListaVentanas();
+	for (int i = 0; i < listaVentanas.size(); i++) {
+	    comboVentana.getItems().add(listaVentanas.get(i).getNombreVentana());
 	}
-
-	public void setVentana(Ventana ventana) {
-		this.ventana = ventana;
+	for (TipoVentana tipoVentana : TipoVentana.values()) {
+	    hashVentanas.put(tipoVentana,
+		    juntarListas(
+			    (List<VentanaComponente>) PersistirVentana.obtenerListaComponentes(tipoVentana.toString()),
+			    componentes));
 	}
+    }
 
-	@FXML
-	private void initialize() {
-		componentes = PersistirComponente.obtenerListaComponentes();
-		asignarVentanas();
-		setearTabla();
-		CheckBox ch = (CheckBox) columnCheckIncluido.getCellData(0);
+    @SuppressWarnings("unchecked")
+    private void setearTabla() {
+	TableColumn<Pair<String, Object>, String> nameColumn = new TableColumn<>("Componente");
+	TableColumn<Pair<String, Object>, Object> valueColumn = new TableColumn<>("Seleccionado");
+	nameColumn.setCellValueFactory(new PairKeyFactory());
+	valueColumn.setCellValueFactory(new PairValueFactory());
+	valueColumn.setSortable(false);
+	valueColumn.setStyle("-fx-alignment: CENTER;");
+	tableComponentes.getColumns().setAll(nameColumn, valueColumn);
+	valueColumn.setCellFactory(
+		new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
+		    @Override
+		    public TableCell<Pair<String, Object>, Object> call(
+			    TableColumn<Pair<String, Object>, Object> column) {
+			return new PairValueCell();
+		    }
+		});
+	tableComponentes.setDisable(true);
+    }
 
+    @FXML
+    void comboVentanaAction(ActionEvent event) {
+	ventanaActual = comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex());
+	if (!listaAnterior.isEmpty()) {
+	    System.out.println("----------------------------------------");
+	    TipoVentana ultimaVentanaSeleccionada = TipoVentana.valueOf(listaAnterior.get(listaAnterior.size() - 1));
+	    ActualizarValoresLista(hashVentanas.get(ultimaVentanaSeleccionada), tableComponentes.getItems());
+	    // hashVentanas.remove(ultimaVentanaSeleccionada);
+	    // hashVentanas.put(ultimaVentanaSeleccionada,
+	    // tableComponentes.getItems());
+	    for (int i = 0; i < hashVentanas.get(ultimaVentanaSeleccionada).size(); i++) {
+		System.out.println(hashVentanas.get(ultimaVentanaSeleccionada).get(i).getValue());
+	    }
 	}
+	tableComponentes.setDisable(false);
+	String ventanaSeleccionada = comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex());
+	listaAnterior.add(ventanaSeleccionada);
+	// tableComponentes.getItems().clear();
+	tableComponentes.setItems(hashVentanas.get(TipoVentana.valueOf(ventanaSeleccionada)));
 
-	@SuppressWarnings("unused")
-	private Pair<TipoVentana, ObservableList<Pair<String, Object>>> pair2(TipoVentana name,
-			ObservableList<Pair<String, Object>> value) {
-		return new Pair<>(name, value);
+    }
+
+    private void ActualizarValoresLista(ObservableList<Pair<String, Object>> listaAnterior,
+	    ObservableList<Pair<String, Object>> listaNueva) {
+	listaAnterior.clear();
+	for (int i = 0; i < listaNueva.size(); i++) {
+	    listaAnterior.add(pair(listaNueva.get(i).getKey(), listaNueva.get(i).getValue()));
 	}
+    }
 
-	private Pair<String, Object> pair(String name, Object value) {
-		return new Pair<>(name, value);
+    // Chequea si existe un componente en la lista de componentes de una ventana
+    private Boolean existeComponente(List<VentanaComponente> listaComp, String elem) {
+	Boolean existe = false;
+	for (int i = 0; i < listaComp.size(); i++) {
+	    if (listaComp.get(i).getId().getNomComponente().equals(elem)) {
+		existe = true;
+	    }
 	}
+	return existe;
+    }
 
-	public TableView<Pair<String, Object>> getTableComponentes() {
-		return tableComponentes;
+    // Devuelve la union de una lista con componentes seleccionados en true y el
+    // resto en false
+    private ObservableList<Pair<String, Object>> juntarListas(List<VentanaComponente> componentesExisten,
+	    List<Componente> listaComponetnes) {
+	ObservableList<Pair<String, Object>> listaUnificada = FXCollections.observableArrayList();
+	for (int i = 0; i < listaComponetnes.size(); i++) {
+	    if (existeComponente(componentesExisten, listaComponetnes.get(i).getNombreComponente())) {
+		listaUnificada.add(pair(listaComponetnes.get(i).getNombreComponente(), true));
+	    } else {
+		listaUnificada.add(pair(listaComponetnes.get(i).getNombreComponente(), false));
+	    }
 	}
+	return listaUnificada;
+    }
 
-	public void setTableComponentes(TableView<Pair<String, Object>> tableComponentes) {
-		this.tableComponentes = tableComponentes;
-	}
+    public static void modificarValorEnObservableList(String key) {
+	ObservableList<Pair<String, Object>> ventanaSelc = hashVentanas.get(TipoVentana.valueOf(ventanaActual));
+	cambiarEstadoPair(ventanaSelc, key);
 
-	@FXML
-	void guardar(ActionEvent event) {
+    }
 
-	}
-
-	@FXML
-	void salir(ActionEvent event) {
-		ventana.getEscenario().close();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void asignarVentanas() {
-		List<net.sbit.model.Ventana> listaVentanas = PersistirVentana.obtenerListaVentanas();
-		for (int i = 0; i < listaVentanas.size(); i++) {
-			comboVentana.getItems().add(listaVentanas.get(i).getNombreVentana());
+    public static void cambiarEstadoPair(ObservableList<Pair<String, Object>> lista, String key) {
+	Boolean estado = false;
+	if (!lista.isEmpty()) {
+	    for (int i = 0; i < lista.size(); i++) {
+		if (lista.get(i).getKey().equals(key)) {
+		    estado = !(Boolean) lista.get(i).getValue();
+		    lista.remove(i);
 		}
-		for (TipoVentana tipoVentana : TipoVentana.values()) {
-			hashVentanas.put(tipoVentana,
-					juntarListas(
-							(List<VentanaComponente>) PersistirVentana.obtenerListaComponentes(tipoVentana.toString()),
-							componentes));
+	    }
+	}
+	lista.add(pair(key, estado));
+	Collections.sort(lista, new Comparator<Pair<String, Object>>() {
+
+	    @Override
+	    public int compare(Pair<String, Object> o1, Pair<String, Object> o2) {
+		int res = String.CASE_INSENSITIVE_ORDER.compare(o1.getKey(), o2.getKey());
+		if (res == 0) {
+		    res = o1.getKey().compareTo(o2.getKey());
 		}
-	}
+		return res;
+	    }
 
-	@SuppressWarnings("unchecked")
-	private void setearTabla() {
-		TableColumn<Pair<String, Object>, String> nameColumn = new TableColumn<>("Componente");
-		TableColumn<Pair<String, Object>, Object> valueColumn = new TableColumn<>("Seleccionado");
-		nameColumn.setCellValueFactory(new PairKeyFactory());
-		valueColumn.setCellValueFactory(new PairValueFactory());
-		valueColumn.setSortable(false);
-		valueColumn.setStyle("-fx-alignment: CENTER;");
-		tableComponentes.getColumns().setAll(nameColumn, valueColumn);
-		valueColumn.setCellFactory(
-				new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
-					@Override
-					public TableCell<Pair<String, Object>, Object> call(
-							TableColumn<Pair<String, Object>, Object> column) {
-						return new PairValueCell();
-					}
-				});
-		tableComponentes.setDisable(true);
-	}
-
-	@FXML
-	void comboVentanaAction(ActionEvent event) {
-		tableComponentes.setDisable(false);
-
-		String ventanaSeleccionada = comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex());
-		listaAnterior.add(ventanaSeleccionada);
-		tableComponentes.getItems().clear();
-		tableComponentes.setItems(hashVentanas.get(TipoVentana.valueOf(ventanaSeleccionada)));
-		System.out.println(tableComponentes.getItems().get(0).getValue());
-	}
-
-	// Chequea si existe un componente en la lista de componentes de una ventana
-	private Boolean existeComponente(List<VentanaComponente> listaComp, String elem) {
-		Boolean existe = false;
-		for (int i = 0; i < listaComp.size(); i++) {
-			if (listaComp.get(i).getId().getNomComponente().equals(elem)) {
-				existe = true;
-			}
-		}
-		return existe;
-	}
-
-	// Devuelve la union de una lista con componentes seleccionados en true y el
-	// resto en false
-	private ObservableList<Pair<String, Object>> juntarListas(List<VentanaComponente> componentesExisten,
-			List<Componente> listaComponetnes) {
-		ObservableList<Pair<String, Object>> listaUnificada = FXCollections.observableArrayList();
-		for (int i = 0; i < listaComponetnes.size(); i++) {
-			if (existeComponente(componentesExisten, listaComponetnes.get(i).getNombreComponente())) {
-				listaUnificada.add(pair(listaComponetnes.get(i).getNombreComponente(), true));
-			} else {
-				listaUnificada.add(pair(listaComponetnes.get(i).getNombreComponente(), false));
-			}
-		}
-		return listaUnificada;
-	}
+	});
+    }
 
 }
