@@ -17,7 +17,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="buttonGuardar" disable="true" layoutX="168.0" layoutY="331.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
+      <Button fx:id="buttonGuardar" layoutX="168.0" layoutY="331.0" mnemonicParsing="false" onAction="#guardar" prefWidth="60.0" text="Guardar" />
       <Button fx:id="buttonSalir" layoutX="241.0" layoutY="331.0" mnemonicParsing="false" onAction="#salir" prefWidth="60.0" text="Salir" />
    </children>
 </AnchorPane>

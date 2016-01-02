@@ -22,6 +22,7 @@ import javafx.util.Pair;
 import net.sbit.enums.TipoVentana;
 import net.sbit.hibernate.PersistirComponente;
 import net.sbit.hibernate.PersistirVentana;
+import net.sbit.hibernate.PersistirVentanaComponente;
 import net.sbit.model.Componente;
 import net.sbit.model.VentanaComponente;
 import net.sbit.window.PairKeyFactory;
@@ -38,7 +39,9 @@ public class ControladorAsignarVentanaEnComponente {
 
     private ObservableList<String> listaAnterior = FXCollections.observableArrayList();
 
-    public static Hashtable<TipoVentana, ObservableList<Pair<String, Object>>> hashVentanas = new Hashtable<TipoVentana, ObservableList<Pair<String, Object>>>();
+    public static Hashtable<TipoVentana, ObservableList<Pair<String, Object>>> hashVentanasDinamicas = new Hashtable<TipoVentana, ObservableList<Pair<String, Object>>>();
+
+    public static Hashtable<TipoVentana, ObservableList<Pair<String, Object>>> hashVentanasEnBase = new Hashtable<TipoVentana, ObservableList<Pair<String, Object>>>();
 
     @FXML
     private TableColumn<Pair<String, Object>, Object> columnCheckIncluido;
@@ -94,7 +97,38 @@ public class ControladorAsignarVentanaEnComponente {
 
     @FXML
     void guardar(ActionEvent event) {
+	TipoVentana vtn = TipoVentana
+		.valueOf(comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex()));
+	hashVentanasDinamicas.remove(vtn);
+	hashVentanasDinamicas.put(vtn, tableComponentes.getItems());
+	for (TipoVentana tipoVentana : TipoVentana.values()) {
+	    ObservableList<Pair<String, Object>> li = hashVentanasEnBase.get(tipoVentana);
+	    for (int i = 0; i < li.size(); i++) {
+		Pair<String, Object> parEnBase = hashVentanasEnBase.get(tipoVentana).get(i);
+		Pair<String, Object> parDinamico = devolverPair(hashVentanasEnBase.get(tipoVentana).get(i).getKey(),
+			hashVentanasDinamicas.get(tipoVentana));
+		if (parEnBase.getKey().equals(parDinamico.getKey())) {
+		    if (!parEnBase.getValue().equals(parDinamico.getValue())) {
+			if (!(Boolean) parEnBase.getValue()) {
+			    PersistirVentanaComponente.nueva(tipoVentana.toString(), parDinamico.getKey());
+			} else {
+			    PersistirVentanaComponente.borrar(tipoVentana.toString(), parDinamico.getKey());
+			}
+		    }
+		}
+	    }
+	}
+	salir(null);
+    }
 
+    private Pair<String, Object> devolverPair(String key, ObservableList<Pair<String, Object>> lista) {
+	Pair<String, Object> par = null;
+	for (int i = 0; i < lista.size(); i++) {
+	    if (lista.get(i).getKey().equals(key)) {
+		par = lista.get(i);
+	    }
+	}
+	return par;
     }
 
     @FXML
@@ -109,7 +143,11 @@ public class ControladorAsignarVentanaEnComponente {
 	    comboVentana.getItems().add(listaVentanas.get(i).getNombreVentana());
 	}
 	for (TipoVentana tipoVentana : TipoVentana.values()) {
-	    hashVentanas.put(tipoVentana,
+	    hashVentanasEnBase.put(tipoVentana,
+		    juntarListas(
+			    (List<VentanaComponente>) PersistirVentana.obtenerListaComponentes(tipoVentana.toString()),
+			    componentes));
+	    hashVentanasDinamicas.put(tipoVentana,
 		    juntarListas(
 			    (List<VentanaComponente>) PersistirVentana.obtenerListaComponentes(tipoVentana.toString()),
 			    componentes));
@@ -140,30 +178,25 @@ public class ControladorAsignarVentanaEnComponente {
     void comboVentanaAction(ActionEvent event) {
 	ventanaActual = comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex());
 	if (!listaAnterior.isEmpty()) {
-	    System.out.println("----------------------------------------");
 	    TipoVentana ultimaVentanaSeleccionada = TipoVentana.valueOf(listaAnterior.get(listaAnterior.size() - 1));
-	    ActualizarValoresLista(hashVentanas.get(ultimaVentanaSeleccionada), tableComponentes.getItems());
-	    // hashVentanas.remove(ultimaVentanaSeleccionada);
-	    // hashVentanas.put(ultimaVentanaSeleccionada,
-	    // tableComponentes.getItems());
-	    for (int i = 0; i < hashVentanas.get(ultimaVentanaSeleccionada).size(); i++) {
-		System.out.println(hashVentanas.get(ultimaVentanaSeleccionada).get(i).getValue());
-	    }
+	    hashVentanasDinamicas.remove(ultimaVentanaSeleccionada);
+	    hashVentanasDinamicas.put(ultimaVentanaSeleccionada, ActualizarValoresLista(tableComponentes.getItems()));
 	}
 	tableComponentes.setDisable(false);
 	String ventanaSeleccionada = comboVentana.getItems().get(comboVentana.getSelectionModel().getSelectedIndex());
 	listaAnterior.add(ventanaSeleccionada);
-	// tableComponentes.getItems().clear();
-	tableComponentes.setItems(hashVentanas.get(TipoVentana.valueOf(ventanaSeleccionada)));
+	tableComponentes.setItems(hashVentanasDinamicas.get(TipoVentana.valueOf(ventanaSeleccionada)));
 
     }
 
-    private void ActualizarValoresLista(ObservableList<Pair<String, Object>> listaAnterior,
+    private ObservableList<Pair<String, Object>> ActualizarValoresLista(
 	    ObservableList<Pair<String, Object>> listaNueva) {
+	ObservableList<Pair<String, Object>> lista = FXCollections.observableArrayList();
 	listaAnterior.clear();
 	for (int i = 0; i < listaNueva.size(); i++) {
-	    listaAnterior.add(pair(listaNueva.get(i).getKey(), listaNueva.get(i).getValue()));
+	    lista.add(pair(listaNueva.get(i).getKey(), listaNueva.get(i).getValue()));
 	}
+	return lista;
     }
 
     // Chequea si existe un componente en la lista de componentes de una ventana
@@ -193,7 +226,8 @@ public class ControladorAsignarVentanaEnComponente {
     }
 
     public static void modificarValorEnObservableList(String key) {
-	ObservableList<Pair<String, Object>> ventanaSelc = hashVentanas.get(TipoVentana.valueOf(ventanaActual));
+	ObservableList<Pair<String, Object>> ventanaSelc = hashVentanasDinamicas
+		.get(TipoVentana.valueOf(ventanaActual));
 	cambiarEstadoPair(ventanaSelc, key);
 
     }
