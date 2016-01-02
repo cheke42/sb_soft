@@ -53,7 +53,7 @@ public class ControladorAsignarVentanaEnComponente {
     private TableView<Pair<String, Object>> tableComponentes;
 
     @FXML
-    private Button buttonGuardar;
+    private   Button buttonGuardar;
 
     @FXML
     private ComboBox<String> comboVentana;
