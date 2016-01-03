@@ -120,5 +120,9 @@ public class PersistirVentana {
 	}
 	return lista;
     }
+    
+    public static void algo(){
+	
+    }
 
 }

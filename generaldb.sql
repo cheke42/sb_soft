@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-12-2015 a las 14:14:51
+-- Tiempo de generación: 03-01-2016 a las 23:11:21
 -- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
@@ -28,7 +28,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `componente` (
   `nombre_componente` varchar(40) NOT NULL,
-  PRIMARY KEY (`nombre_componente`)
+  PRIMARY KEY (`nombre_componente`),
+  UNIQUE KEY `nombre_componente` (`nombre_componente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -37,12 +38,11 @@ CREATE TABLE IF NOT EXISTS `componente` (
 
 INSERT INTO `componente` (`nombre_componente`) VALUES
 ('button_cancelar'),
+('button_salir'),
 ('button_save'),
-('jose'),
-('menu_item_conf'),
-('nuevoPermiso_fieldNombre'),
-('pepe'),
-('peperulo');
+('menu_item_acercade'),
+('menu_item_salir'),
+('tableViewTodo');
 
 -- --------------------------------------------------------
 
@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS `perfil` (
 --
 
 INSERT INTO `perfil` (`nombre_perfil`, `estado_perfil`) VALUES
-('administrador', b'0'),
-('desarrollador', b'1'),
-('tester', b'1');
+('ADMINISTRADOR', b'1'),
+('DESARROLLADOR', b'1'),
+('TESTER', b'1');
 
 -- --------------------------------------------------------
 
@@ -73,14 +73,22 @@ INSERT INTO `perfil` (`nombre_perfil`, `estado_perfil`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `perfil_ventana_componente` (
+  `nom_com_vpc` varchar(40) NOT NULL,
   `nom_per_vpc` varchar(40) NOT NULL,
   `nom_ven_vpc` varchar(40) NOT NULL,
-  `nom_com_vpc` varchar(40) NOT NULL,
-  `estado` bit(1) DEFAULT b'0',
-  PRIMARY KEY (`nom_per_vpc`,`nom_com_vpc`,`nom_ven_vpc`),
-  KEY `fk_nom_com_cp_idx` (`nom_com_vpc`),
-  KEY `fk_nom_ven_cp_idx` (`nom_ven_vpc`)
+  `estado` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`nom_com_vpc`,`nom_per_vpc`,`nom_ven_vpc`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `perfil_ventana_componente`
+--
+
+INSERT INTO `perfil_ventana_componente` (`nom_com_vpc`, `nom_per_vpc`, `nom_ven_vpc`, `estado`) VALUES
+('button_cancelar', 'ADMINISTRADOR', 'NUEVO_USUARIO', b'1'),
+('button_cancelar', 'TESTER', 'NUEVO_USUARIO', b'1'),
+('button_salir', 'TESTER', 'NUEVO_USUARIO', b'1'),
+('button_save', 'TESTER', 'NUEVO_USUARIO', b'1');
 
 -- --------------------------------------------------------
 
@@ -119,8 +127,7 @@ INSERT INTO `ventana` (`nombre_ventana`) VALUES
 CREATE TABLE IF NOT EXISTS `ventana_componente` (
   `nom_componente` varchar(40) NOT NULL,
   `nom_ventana` varchar(40) NOT NULL,
-  PRIMARY KEY (`nom_componente`,`nom_ventana`),
-  KEY `fk_comp_ventana_idx` (`nom_ventana`)
+  PRIMARY KEY (`nom_componente`,`nom_ventana`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -128,29 +135,17 @@ CREATE TABLE IF NOT EXISTS `ventana_componente` (
 --
 
 INSERT INTO `ventana_componente` (`nom_componente`, `nom_ventana`) VALUES
+('button_cancelar', 'ADMINISTRAR_VENTANAS_A_PERFIL'),
+('button_cancelar', 'CREAR_PERFIL'),
 ('button_cancelar', 'NUEVO_USUARIO'),
+('button_salir', 'CREAR_PERFIL'),
+('button_salir', 'NUEVO_USUARIO'),
+('button_save', 'CREAR_PERFIL'),
 ('button_save', 'NUEVO_USUARIO'),
-('jose', 'NUEVO_USUARIO'),
-('button_save', 'PANTALLA_PRINCIPAL');
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `perfil_ventana_componente`
---
-ALTER TABLE `perfil_ventana_componente`
-  ADD CONSTRAINT `fk_nom_com_cp` FOREIGN KEY (`nom_com_vpc`) REFERENCES `componente` (`nombre_componente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_nom_pef_cp` FOREIGN KEY (`nom_per_vpc`) REFERENCES `perfil` (`nombre_perfil`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_nom_ven_cp` FOREIGN KEY (`nom_ven_vpc`) REFERENCES `ventana` (`nombre_ventana`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `ventana_componente`
---
-ALTER TABLE `ventana_componente`
-  ADD CONSTRAINT `fk_comp_cp` FOREIGN KEY (`nom_componente`) REFERENCES `componente` (`nombre_componente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_vent_cp` FOREIGN KEY (`nom_ventana`) REFERENCES `ventana` (`nombre_ventana`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+('menu_item_acercade', 'ADMINISTRAR_VENTANAS_A_PERFIL'),
+('menu_item_salir', 'PANTALLA_PRINCIPAL'),
+('tableViewTodo', 'ADMINISTRAR_VENTANAS_A_PERFIL'),
+('tableViewTodo', 'PANTALLA_PRINCIPAL');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

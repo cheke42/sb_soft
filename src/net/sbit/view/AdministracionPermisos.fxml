@@ -16,7 +16,6 @@
       <TableView fx:id="tableViewPermisos" layoutX="26.0" layoutY="110.0" prefHeight="252.0" prefWidth="274.0">
         <columns>
           <TableColumn fx:id="columnId" prefWidth="75.0" text="Id" />
-          <TableColumn fx:id="columnTipo" prefWidth="75.0" text="Tipo" />
             <TableColumn fx:id="columnEstado" prefWidth="75.0" text="Visible" />
         </columns>
          <columnResizePolicy>

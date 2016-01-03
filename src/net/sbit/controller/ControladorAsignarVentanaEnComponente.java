@@ -53,7 +53,7 @@ public class ControladorAsignarVentanaEnComponente {
     private TableView<Pair<String, Object>> tableComponentes;
 
     @FXML
-    private   Button buttonGuardar;
+    private Button buttonGuardar;
 
     @FXML
     private ComboBox<String> comboVentana;
@@ -163,6 +163,7 @@ public class ControladorAsignarVentanaEnComponente {
 	valueColumn.setSortable(false);
 	valueColumn.setStyle("-fx-alignment: CENTER;");
 	tableComponentes.getColumns().setAll(nameColumn, valueColumn);
+	tableComponentes.setPlaceholder(new Label(""));
 	valueColumn.setCellFactory(
 		new Callback<TableColumn<Pair<String, Object>, Object>, TableCell<Pair<String, Object>, Object>>() {
 		    @Override

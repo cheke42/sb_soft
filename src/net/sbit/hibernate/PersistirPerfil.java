@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import net.sbit.enums.TipoPerfil;
 import net.sbit.model.Perfil;
 
 public class PersistirPerfil {
@@ -94,6 +95,14 @@ public class PersistirPerfil {
 	    session.close();
 	}
 	return perfiles;
+    }
+
+    public static void agregarPerfilesNuevos() {
+	for (TipoPerfil tipoPerfil : TipoPerfil.values()) {
+	    if (!existePerfil(tipoPerfil.toString())) {
+		nuevo(tipoPerfil.toString(), true);
+	    }
+	}
     }
 
 }
